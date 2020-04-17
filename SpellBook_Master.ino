@@ -29,6 +29,7 @@ Adafruit_SharpMem display(SHARP_SCK, SHARP_MOSI, SHARP_SS, 144, 168);
 
 ///////////////////////////////////////////////////////////////////////////
 uint8_t activeSlot = 0;
+uint8_t activeSpell = 0;
 const uint8_t SPELL_LEVELS = 4;
 uint8_t slotsMax[SPELL_LEVELS] = {4,3,3,3};
 uint8_t slotsLeft[SPELL_LEVELS] = {4,3,3,3};
@@ -59,14 +60,14 @@ void setup() {
 }
 
 void loop() {
-  Serial.println(tome[0]->range);
+  //Serial.println(tome[0]->range);
   //check encoder
   static int pos = 0;
   encoder.tick();
   int newPos = encoder.getPosition();
   if (pos != newPos){
     if(knob == knobMode::Slots) slotEncoderUpdate(pos,newPos);
-    else if(knob == knobMode::Spells) Serial.println("lightning bolt");
+    else if(knob == knobMode::Spells) spellEncoderUpdate(pos,newPos);
     Serial.println(newPos);  
     pos=newPos;
   }
@@ -118,35 +119,94 @@ void slotEncoderUpdate(int pos, int newPos) {
     if (slotsLeft[activeSlot] > 10) slotsLeft[activeSlot] = slotsMax[activeSlot];
   }
 }
+
+
+void spellEncoderUpdate(int pos, int newPos) {
+  if (pos > newPos) {
+    activeSpell++;
+    if (activeSpell >= TOME_LENGTH) activeSpell = 0; 
+  }
+  else if (pos < newPos) {
+    activeSpell--;
+    if (activeSpell < 0) activeSpell = TOME_LENGTH-1;
+  }
+  draw_spells();
+}
 //////////////////////////////////////////////////
-void draw_spells() {
+void draw_spells(){
+  display.clearDisplay();
   display.setRotation(3);
-  display.setCursor(0,0);
-  //display.clearDisplay();
+   
+  
   display.setTextColor(BLACK);
   
   display.setTextSize(2);
-  display.println("Toll the Dead");
+  display.setCursor(0,0);
+  
+  display.println(tome[activeSpell]->spellName);
 
   display.setTextSize(1);
-  display.setTextColor(WHITE,BLACK);
-  display.println("Level: Cantrip              ");
-  display.println("Casting time: 1 Action      ");
-  display.println("Range: 60 feet              ");
-  display.println("Components: V, S            ");
-  display.println("Duration: Instantaneous     ");
- 
-  display.setFont(&URW_Gothic_L_Book_10);
+  //display.setTextColor(WHITE,BLACK);
   
-  display.setTextColor(BLACK);
-  display.println("You point at one creature\nyou can see within range, ");
-  display.println("and the sound of a dolorous");
-  display.println("bell fills the air around it"); //28x
-  display.println("for a moment. The target");
-  display.println("must succeed on a Wisdom");
-  display.println("saving throw or take 1d8 target is");
-  display.println("missing any of its hit points,"); 
-  display.println("it instead takes 1d12 necrotic");
-  display.println("damage. necrotic damage. If theThe spell’s damage increases by one die when you reach 5th level (2d8 or 2d12), 11th level (3d8 or 3d12), and 17th level (4d8 or 4d12).");
+  display.print("Level: ");
+  display.print(tome[activeSpell]->level);
+  if(tome[activeSpell]->ritual) {
+    display.println("  RITUAL");
+  }
+  else display.println("");
+  display.print("Casting time: ");
+  display.println(tome[activeSpell]->casting_time);
+  display.print("Range: ");
+  display.println(tome[activeSpell]->range);
+  display.print("Components:");
+  display.println(tome[activeSpell]->components);
+  display.print("Duration:");
+  display.println(tome[activeSpell]->duration);
+  
+  
+  //display.setFont(&URW_Gothic_L_Book_10);
+  
+  //display.setTextColor(BLACK);
+  //display.println("You point at one creature\nyou can see within range, ");
+  //display.println("and the sound of a dolorous");
+  //display.println("bell fills the air around it"); //28x
+  //display.println("for a moment. The target");
+  //display.println("must succeed on a Wisdom");
+  //display.println("saving throw or take 1d8 target is");
+  //display.println("missing any of its hit points,"); 
+  //display.println("it instead takes 1d12 necrotic");
+  //display.println("damage. necrotic damage. If theThe spell’s damage increases by one die when you reach 5th level (2d8 or 2d12), 11th level (3d8 or 3d12), and 17th level (4d8 or 4d12).");
   display.refresh();
+  delay(500);
 }
+//void draw_spells2() {
+//  display.setRotation(3);
+//  display.setCursor(0,0);
+//  //display.clearDisplay();
+//  display.setTextColor(BLACK);
+//  
+//  display.setTextSize(2);
+//  display.println("Toll the Dead");
+//
+//  display.setTextSize(1);
+//  display.setTextColor(WHITE,BLACK);
+//  display.println("Level: Cantrip              ");
+//  display.println("Casting time: 1 Action      ");
+//  display.println("Range: 60 feet              ");
+//  display.println("Components: V, S            ");
+//  display.println("Duration: Instantaneous     ");
+// 
+//  display.setFont(&URW_Gothic_L_Book_10);
+//  
+//  display.setTextColor(BLACK);
+//  display.println("You point at one creature\nyou can see within range, ");
+//  display.println("and the sound of a dolorous");
+//  display.println("bell fills the air around it"); //28x
+//  display.println("for a moment. The target");
+//  display.println("must succeed on a Wisdom");
+//  display.println("saving throw or take 1d8 target is");
+//  display.println("missing any of its hit points,"); 
+//  display.println("it instead takes 1d12 necrotic");
+//  display.println("damage. necrotic damage. If theThe spell’s damage increases by one die when you reach 5th level (2d8 or 2d12), 11th level (3d8 or 3d12), and 17th level (4d8 or 4d12).");
+//  display.refresh();
+//}
