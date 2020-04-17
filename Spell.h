@@ -10,7 +10,7 @@ class Spell{
     uint8_t level;
     char range[11];
     bool ritual;
-    char school[11];
+    char school[15];
     char description[300];
 
     Spell(const char* n,const char* ct,const char* com,const char* dur, uint8_t lv,const char* r,bool ri, const char* sc, const char* de);

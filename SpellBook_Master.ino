@@ -19,7 +19,7 @@
 #define BLACK 0
 #define WHITE 1
 
-const uint8_t TOME_LENGTH = 6;
+const uint8_t TOME_LENGTH = 5;
 CircularBuffer<Spell*, TOME_LENGTH> tome;
 
 ///////////////////////////////////////////////////////////////////////////
@@ -53,12 +53,13 @@ void setup() {
   display.clearDisplay();
 
 
-  //parseSpellJson();
+  parseSpellJson();
   draw_slots(true);
   draw_spells();
 }
 
 void loop() {
+  Serial.println(tome[0]->range);
   //check encoder
   static int pos = 0;
   encoder.tick();
