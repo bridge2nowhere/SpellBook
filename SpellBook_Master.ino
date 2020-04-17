@@ -9,12 +9,12 @@
 #include "custFont.h"
 
 #define ENCODER_BUTT 2
-#define ENCODER_1 3
-#define ENCODER_2 4
+#define ENCODER_1 14
+#define ENCODER_2 16
 
-#define SHARP_SCK  2
-#define SHARP_MOSI 16
-#define SHARP_SS   0
+#define SHARP_SCK  15
+#define SHARP_MOSI 13
+#define SHARP_SS   12
 
 #define BLACK 0
 #define WHITE 1
@@ -47,12 +47,13 @@ void setup() {
   pinMode(ENCODER_BUTT, INPUT_PULLUP);
   matrix.begin(0x70);  // pass in the address
   matrix.setRotation(0);
+  matrix.setBrightness(5);
   matrix.clear();
   display.begin();
   display.clearDisplay();
 
 
-  parseSpellJson();
+  //parseSpellJson();
   draw_slots(true);
   draw_spells();
 }
@@ -118,7 +119,7 @@ void slotEncoderUpdate(int pos, int newPos) {
 }
 //////////////////////////////////////////////////
 void draw_spells() {
-  display.setRotation(1);
+  display.setRotation(3);
   display.setCursor(0,0);
   //display.clearDisplay();
   display.setTextColor(BLACK);
