@@ -23,6 +23,10 @@ This Arduino project keeps track of spell slots and spell text without having to
 # 3D Printed Shell & 
 * I used a 50mm donut semiprecious gemstone pendant for the knob
 * I used 18x25mm semiprecious oval cabochons for the upper back panel
+![image](https://user-images.githubusercontent.com/38335227/82676911-01a6e480-9bfc-11ea-9411-a797c4ffbcaf.png)
+![image](https://user-images.githubusercontent.com/38335227/82676941-0ec3d380-9bfc-11ea-9f65-5e3f2b848600.png)
+
+
 
 # Future Plans
 * Add a way to do long rests
