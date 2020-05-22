@@ -6,7 +6,7 @@ class Spell{
     char spellName[21];
     char casting_time[13];
     char components[11];
-    char duration[11];
+    char duration[15];
     uint8_t level;
     char range[11];
     bool ritual;
