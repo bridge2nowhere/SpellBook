@@ -14,9 +14,9 @@
 #include <StreamUtils.h>
 
 
-#define ENCODER_BUTT 9
-#define ENCODER_1 6
-#define ENCODER_2 5
+#define ENCODER_BUTT 6 //sw
+#define ENCODER_1 5 //clk
+#define ENCODER_2 9 //dt
 
 #define SHARP_SCK  13
 #define SHARP_MOSI 12
@@ -37,7 +37,7 @@ Adafruit_SharpMem display(SHARP_SCK, SHARP_MOSI, SHARP_SS, 400, 240);
 
 ///////////////////////////////////////////////////////////////////////////
 uint8_t activeSlot = 0;
-uint8_t activeSpell = 0;
+int activeSpell = 0;
 const uint8_t SPELL_LEVELS = 4;
 uint8_t slotsMax[SPELL_LEVELS] = {4,3,3,3};
 uint8_t slotsLeft[SPELL_LEVELS] = {4,3,3,3};
@@ -52,16 +52,12 @@ knobMode knob = knobMode::Slots;
 
 void setup() {
   Serial.begin(9600);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
-  }
+//  while (!Serial) {
+//    ; // wait for serial port to connect. Needed for native USB port only
+//  }
  Serial.print("Initializing SD card...");
 
-  if (!SD.begin(4)) {
-    Serial.println("initialization failed!");
-    return;
-  }
-  Serial.println("initialization done.");
+  
 
 
   
@@ -74,6 +70,7 @@ void setup() {
   display.clearDisplay();
 
 
+  
   parseSpellJson();
   draw_slots(true);
   draw_spells();
@@ -104,15 +101,32 @@ void loop() {
 }
 
 //////////////////////////////////////////////
+
 void parseSpellJson() {
+  display.setRotation(2);
+  display.setCursor(0,12);
+  display.setTextColor(BLACK);
+  display.setFont(&FreeSansBold12pt7b);
+  if (!SD.begin(4)) {
+    display.println("SD initialization failed!");
+    return;
+  }
+  else {
+    display.println("SD initialization done.");
+  }
+  display.refresh();
+  display.println("Loading Spells");
+  display.refresh();
   const size_t capacity = JSON_ARRAY_SIZE(6) + 6 * JSON_OBJECT_SIZE(9) + 2150;
   DynamicJsonDocument doc(capacity);
-
+  
  
   
-  File spellJSON = SD.open("TOME2.TXT");
+  File spellJSON = SD.open("TOME.TXT");
 
   if (spellJSON) {
+    display.println("Parsing Spell List");
+    display.refresh();
     //deserializeJson(doc, spellJSON);
     ReadLoggingStream loggingStream(spellJSON, Serial);
     ReadBufferingStream bufferingStream(spellJSON, 64);
@@ -120,7 +134,8 @@ void parseSpellJson() {
     
   }
   else {
-    Serial.println("error opening txt");
+    display.println("Error opening file");
+    display.refresh();
   }
 
   
@@ -128,12 +143,16 @@ void parseSpellJson() {
     JsonObject root = doc[i];   
     Spell* newSpell = new Spell(root["name"], root["casting_time"], root["components"], root["duration"], root["level"], root["range"], root["ritual"], root["school"], root["description"]);
     tome.push(newSpell);
-    Serial.println(i);
-    Serial.println(newSpell->spellName);
+    display.setFont();
+    display.print(i);
+    display.println(newSpell->spellName);
+    display.refresh();
   }
 
   //free(pBuffer);
-  Serial.println(tome[1]->spellName);
+  //Serial.println(tome[1]->spellName);
+  display.println();
+  while(digitalRead(ENCODER_BUTT)) {}
   
 }
 ////////////////////////////////////////////
@@ -164,7 +183,7 @@ void slotEncoderUpdate(int pos, int newPos) {
 void spellEncoderUpdate(int pos, int newPos) {
   if (pos > newPos) {
     activeSpell++;
-    if (activeSpell > tome.size()) activeSpell = 0; 
+    if (activeSpell > tome.size()-1) activeSpell = 0; 
   }
   else if (pos < newPos) {
     activeSpell--;
@@ -212,21 +231,22 @@ void draw_spells(){
   display.println(tome[activeSpell]->duration);
 
   
-  display.setTextWrap(false);
+  //display.setTextWrap(false);
 
   display.setTextSize(1);
   display.setFont(&URW_Gothic_L_Book_14);
   
   display.setTextColor(BLACK);
-  display.println("You point at one creature you can see within range, ");
-  display.println("and the sound of a dolorous");
-  display.println("bell fills the air around it"); //28x
-  display.println("for a moment. The target");
-  display.println("must succeed on a Wisdom");
-  display.println("saving throw or take 1d8 target is");
-  display.println("missing any of its hit points,"); 
-  display.println("it instead takes 1d12 necrotic");
-  display.println("damage. necrotic damage. If theThe spell’s damage increases by one die when you reach 5th level (2d8 or 2d12), 11th level (3d8 or 3d12), and 17th level (4d8 or 4d12).");
+  display.println("You point at one creature you can see within  ");
+  display.println("range, and the sound of a dolorous bell fills");
+  display.println("the air around it for a moment. The target"); //28x
+  display.println("must succeed on a Wisdom saving throw or ");
+  display.println("take 1d8 necrotic damage if the target is");
+  display.println("missing any of its hit points,it instead takes"); 
+  display.println(" 1d12 necrotic damage.");
+  display.println();
+  display.println("The spell’s damage increases by one die when you ");
+  display.println("reach 5 lvl (2dx), 1 lvl (3dx), and 17 lvl (4dx).");
   display.refresh();
   delay(500);
 }
