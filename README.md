@@ -8,6 +8,7 @@ This Arduino project keeps track of spell slots and spell text without having to
 * Adafruit M0 Adalogger
 * Adafruit Sharp Memory Display Breakout Board
 * Adafruit 8x8 Mini Led Matrix
+* MicroSD card for JSON spell file
 * 2.7" Sharp Memory Display (replacing the one that comes on the breakout board)
 * KY-040 Rotary Encoder
 
