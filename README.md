@@ -1,5 +1,7 @@
 # SpellBook
 
+![image](https://user-images.githubusercontent.com/38335227/82676829-db814480-9bfb-11ea-97d4-c40af538b854.png)
+
 Tabletop SpellBook for Dungeons and Dragons 5e.
 
 This Arduino project keeps track of spell slots and spell text without having to have a phone out, spell cards, or a stack of paper/book.
