@@ -1,6 +1,6 @@
 #include "Spell.h"
 
-Spell::Spell(const char* n,const char* ct,const char* com,const char* dur, uint8_t lv,const char* r,bool ri, const char* sc, const char* de) {
+Spell::Spell(const char* n,const char* ct,const char* com,const char* dur, uint8_t lv,const char* r,bool ri, const char* sc, const char* p0, const char* p1, const char* p2, const char* p3) {
     strncpy(spellName, n, sizeof(spellName)-1);
     spellName[sizeof(spellName) - 1] = '\0';
     
@@ -22,7 +22,18 @@ Spell::Spell(const char* n,const char* ct,const char* com,const char* dur, uint8
     
     strncpy(school, sc, sizeof(school)-1);
     school[sizeof(school) - 1] = '\0';
+
+    strncpy(page0, p0, sizeof(page0)-1);
+    page0[sizeof(page0) - 1] = '\0';
+       
+    strncpy(page1, p1, sizeof(page1)-1);
+    page1[sizeof(page1) - 1] = '\0';
+
+    strncpy(page2, p2, sizeof(page2)-1);
+    page2[sizeof(page2) - 1] = '\0';
+
+    strncpy(page3, p3, sizeof(page3)-1);
+    page3[sizeof(page3) - 1] = '\0';
+
     
-    strncpy(description, de, sizeof(description)-1);
-    description[sizeof(description) - 1] = '\0';
 }

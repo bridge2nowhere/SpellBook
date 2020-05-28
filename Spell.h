@@ -11,31 +11,10 @@ class Spell{
     char range[11];
     bool ritual;
     char school[15];
-    char description[300];
+    char page0[420];
+    char page1[420];
+    char page2[420];
+    char page3[420];
 
-    Spell(const char* n,const char* ct,const char* com,const char* dur, uint8_t lv,const char* r,bool ri, const char* sc, const char* de);
+    Spell(const char* n,const char* ct,const char* com,const char* dur, uint8_t lv,const char* r,bool ri, const char* sc, const char* p0, const char* p1, const char* p2, const char* p3);
 };
-
-/*
- * 
- * 
-//////////////////////////////////////////////
-#include <Arduino.h>
-#include "Spell.h"
-
-class SpellBook {
-  public:
-    char spellName[20];
-    char casting_time[10];
-
-    SpellBook(const char* n, const char* ct);
-};
-
-SpellBook::SpellBook(const char* n, const char* ct) {
-  strncpy(spellName, n, sizeof(spellName) - 1);
-  spellName[sizeof(spellName) - 1] = '\0';
-  strncpy(casting_time, ct, sizeof(casting_time) - 1);
-  casting_time[sizeof(casting_time) - 1] = '\0';
-}
-
- */
